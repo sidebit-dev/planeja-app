@@ -1,1 +1,38 @@
-<p>register-card works!</p>
+<!-- Header -->
+<header class="header">
+  <h1>Cadastro de Cartões</h1>
+
+  <div class="user-area">
+    <span class="user-name">Olá, Usuário</span>
+    <i class="fa-solid fa-circle-user"></i>
+  </div>
+</header>
+<!-- Conteúdo -->
+<main class="content">
+  <div class="card">
+    <h2>Novo Cartão</h2>
+
+    <form class="form">
+      <div class="form-group">
+        <label for="name">Nome do Cartão: *</label>
+        <input type="text" id="name" name="name" placeholder="Ex: Nubank" />
+      </div>
+
+      <div class="form-group">
+        <label for="flag">Bandeira</label>
+        <select id="flag">
+          <option>Selecione...</option>
+          <option>Visa</option>
+          <option>Mastercard</option>
+          <option>American Express</option>
+          <option>Dinners</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Salvar</button>
+        <button type="button" class="btn-secondary">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</main>
