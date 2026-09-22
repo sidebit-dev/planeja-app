@@ -5,7 +5,7 @@ import { DatasCardForm, DetailsCard } from '../datas-card';
 
 interface RegisterCardForm {
   name: FormControl<string>;
-  flag: FormControl<string>;
+  cardNetwork: FormControl<string>;
 }
 
 @Component({
@@ -22,7 +22,7 @@ export class RegisterCard implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup<RegisterCardForm>({
       name: new FormControl('', { nonNullable: true, validators: Validators.required }),
-      flag: new FormControl('', { nonNullable: true, validators: Validators.required }),
+      cardNetwork: new FormControl('', { nonNullable: true, validators: Validators.required }),
     });
   }
 

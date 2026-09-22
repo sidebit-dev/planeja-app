@@ -1,11 +1,11 @@
 export class DatasCardForm {
   name!: string;
-  flag!: string;
+  cardNetwork!: string;
 }
 
 export class DetailsCard {
   id!: string;
   name!: string;
-  flag!: string;
+  cardNetwork!: string;
   dateRegister!: Date;
 }
