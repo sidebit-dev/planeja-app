@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CardService } from '../card-service';
+import { DatasCardForm, DetailsCard } from '../datas-card';
 
 interface RegisterCardForm {
   name: FormControl<string>;
@@ -15,6 +17,7 @@ interface RegisterCardForm {
 export class RegisterCard implements OnInit {
   // Este ! não é um campo opcional
   form!: FormGroup<RegisterCardForm>;
+  service = inject(CardService);
   // Qdo acessado a rota desta página, vai ser executado
   ngOnInit(): void {
     this.form = new FormGroup<RegisterCardForm>({
@@ -25,5 +28,12 @@ export class RegisterCard implements OnInit {
 
   handleSubmit() {
     console.log(this.form.value);
+    const datasCard = this.form.value as DatasCardForm;
+    this.service.create(datasCard).subscribe({
+      next: (response: DetailsCard) => {
+        console.log('Recebendo a resposta do servidor: ', response);
+      },
+      error: (error) => console.log('Ocorreu um erro: ', error),
+    });
   }
 }
