@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CardService } from '../card-service';
 import { DatasCardForm, DetailsCard } from '../datas-card';
+import { ValidationErrorResponse } from '../../common/validation/validation-error-model';
 
 interface RegisterCardForm {
   name: FormControl<string>;
@@ -33,7 +34,25 @@ export class RegisterCard implements OnInit {
       next: (response: DetailsCard) => {
         console.log('Recebendo a resposta do servidor: ', response);
       },
-      error: (error) => console.log('Ocorreu um erro: ', error),
+      // error: (error) => console.log('Ocorreu um erro: ', error),
+      error: (error) => this.onApiError(error),
     });
+  }
+
+  private aplicarErrosValidacao(error: ValidationErrorResponse) {
+    error.fieldsInvalids.forEach((ci) => {
+      const control = this.form.get(ci.campo);
+      if (control) {
+        control.setErrors({ apiError: ci.erro }); // apiError foi inventado
+        control.markAsTouched(); // Fazer disparar os erros
+      }
+    });
+  }
+
+  private onApiError(response: any): void {
+    if (response.status === 422) {
+      this.aplicarErrosValidacao(response.console.error);
+      return;
+    }
   }
 }
