@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CardService } from '../card-service';
 import { DatasCardForm, DetailsCard } from '../datas-card';
 import { ValidationErrorResponse } from '../../common/validation/validation-error-model';
+import { CommonModule } from '@angular/common';
 
 interface RegisterCardForm {
   name: FormControl<string>;
@@ -11,7 +12,7 @@ interface RegisterCardForm {
 
 @Component({
   selector: 'app-register-card',
-  imports: [ReactiveFormsModule], // para ligar o HTML com os campos definidos
+  imports: [ReactiveFormsModule, CommonModule], // para ligar o HTML com os campos definidos
   templateUrl: './register-card.html',
   styleUrl: './register-card.scss',
 })
@@ -27,8 +28,19 @@ export class RegisterCard implements OnInit {
     });
   }
 
+  isFormInvalid(): boolean {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return true;
+    }
+    return false;
+  }
+
   handleSubmit() {
-    console.log(this.form.value);
+    // console.log(this.form.value);
+    if (this.isFormInvalid()) {
+      return;
+    }
     const datasCard = this.form.value as DatasCardForm;
     this.service.create(datasCard).subscribe({
       next: (response: DetailsCard) => {
@@ -41,9 +53,9 @@ export class RegisterCard implements OnInit {
 
   private aplicarErrosValidacao(error: ValidationErrorResponse) {
     error.fieldsInvalids.forEach((ci) => {
-      const control = this.form.get(ci.campo);
+      const control = this.form.get(ci.field);
       if (control) {
-        control.setErrors({ apiError: ci.erro }); // apiError foi inventado
+        control.setErrors({ apiError: ci.error }); // apiError foi inventado
         control.markAsTouched(); // Fazer disparar os erros
       }
     });
@@ -51,7 +63,7 @@ export class RegisterCard implements OnInit {
 
   private onApiError(response: any): void {
     if (response.status === 422) {
-      this.aplicarErrosValidacao(response.console.error);
+      this.aplicarErrosValidacao(response.error);
       return;
     }
   }

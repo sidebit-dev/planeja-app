@@ -6,6 +6,6 @@ export interface ValidationErrorResponse {
 }
 
 export interface CampoInvalido {
-  campo: string;
-  erro: string;
+  field: string;
+  error: string;
 }
