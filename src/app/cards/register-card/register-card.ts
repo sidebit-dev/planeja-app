@@ -4,6 +4,7 @@ import { CardService } from '../card-service';
 import { DatasCardForm, DetailsCard } from '../datas-card';
 import { ValidationErrorResponse } from '../../common/validation/validation-error-model';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 interface RegisterCardForm {
   name: FormControl<string>;
@@ -20,6 +21,7 @@ export class RegisterCard implements OnInit {
   // Este ! não é um campo opcional
   form!: FormGroup<RegisterCardForm>;
   service = inject(CardService);
+  toast = inject(ToastrService);
   // Qdo acessado a rota desta página, vai ser executado
   ngOnInit(): void {
     this.form = new FormGroup<RegisterCardForm>({
@@ -31,6 +33,7 @@ export class RegisterCard implements OnInit {
   isFormInvalid(): boolean {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.toast.error('Erro de validação. Verifique os valores informados.');
       return true;
     }
     return false;
@@ -45,6 +48,7 @@ export class RegisterCard implements OnInit {
     this.service.create(datasCard).subscribe({
       next: (response: DetailsCard) => {
         console.log('Recebendo a resposta do servidor: ', response);
+        this.toast.success('Cartão cadastrado/atualizado com sucesso!');
       },
       // error: (error) => console.log('Ocorreu um erro: ', error),
       error: (error) => this.onApiError(error),
@@ -64,7 +68,10 @@ export class RegisterCard implements OnInit {
   private onApiError(response: any): void {
     if (response.status === 422) {
       this.aplicarErrosValidacao(response.error);
+      this.toast.error('Erro de validação. Verifique os valores informados.');
       return;
     }
+    this.toast.error('Ocorreu um erro ao processar a requisição.');
+    console.error(response.error);
   }
 }
